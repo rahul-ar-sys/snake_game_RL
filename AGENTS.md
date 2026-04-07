@@ -34,7 +34,8 @@ Both agents use LLM reasoning coupled with RL, storing decision weights and cont
 - Run tests: `python -m pytest tests/`
 - Lint code: `flake8 .`
 - Format code: `black .`
-- Train agents: `python train.py --episodes 1000`
+- Train agents: `python main.py --train --episodes 1000`
+- Play game: `python main.py --play`
 - Visualize training: `tensorboard --logdir logs/`
 - Start frontend server: `python -m http.server 8000` (from frontend directory)
 
@@ -45,3 +46,14 @@ Both agents use LLM reasoning coupled with RL, storing decision weights and cont
 - Backend storage uses SQLite for persistence of experiences and model parameters
 - Frontend uses vanilla HTML/CSS/JS for simplicity, updating via DOM manipulation
 - In production, frontend would connect to backend API for real game state updates
+- Main entry point is `main.py` with training and playing modes
+- Agents store experiences in SQLite databases in the `storage/` directory
+- Configuration is managed through files in the `config/` directory
+
+## Important Files
+- `main.py`: Entry point for training and playing the game
+- `agents/snake_agent.py`: Snake agent implementation with Q-learning
+- `agents/fruit_agent.py`: Fruit agent implementation with Q-learning
+- `environment/game_env.py`: Game environment managing state and rules
+- `utils/helpers.py`: Utility functions for game logic
+- `config/game_config.py`: Game parameters and hyperparameters
