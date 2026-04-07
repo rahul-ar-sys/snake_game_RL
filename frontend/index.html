@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Player Snake Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            background-color: #222;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .grid-cell {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+        .snake {
+            background-color: #00ff00;
+        }
+        .fruit {
+            background-color: #ff0000;
+        }
+        .head {
+            background-color: #00cc00;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            width: 500px;
+            margin-top: 10px;
+        }
+        .stat-box {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: 100px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Two-Player Snake Game</h1>
+    <div id="game-container"></div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <h3>Snake Score</h3>
+            <p id="snake-score">0</p>
+        </div>
+        <div class="stat-box">
+            <h3>Fruit Score</h3>
+            <p id="fruit-score">0</p>
+        </div>
+        <div class="stat-box">
+            <h3>Turn</h3>
+            <p id="turn">0</p>
+        </div>
+    </div>
+    
+    <div id="controls">
+        <button id="start-btn">Start Game</button>
+        <button id="step-btn" disabled>Step Forward</button>
+        <button id="reset-btn">Reset</button>
+    </div>
+
+    <script>
+        // Simple frontend for the snake game
+        // In a full implementation, this would communicate with a backend API
+        
+        const gameContainer = document.getElementById('game-container');
+        const snakeScoreEl = document.getElementById('snake-score');
+        const fruitScoreEl = document.getElementById('fruit-score');
+        const turnEl = document.getElementById('turn');
+        const startBtn = document.getElementById('start-btn');
+        const stepBtn = document.getElementById('step-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        
+        const gridSize = 30; // 30x30 grid
+        const cellSize = 20; // 20px per cell
+        let gameState = null;
+        let gameInterval = null;
+        
+        // Initialize empty grid
+        function initGame() {
+            // Clear container
+            gameContainer.innerHTML = '';
+            
+            // Create grid cells
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.style.left = (x * cellSize) + 'px';
+                    cell.style.top = (y * cellSize) + 'px';
+                    gameContainer.appendChild(cell);
+                }
+            }
+        }
+        
+        // Update display based on game state
+        function updateDisplay(state) {
+            gameState = state;
+            
+            // Clear previous state
+            document.querySelectorAll('.snake, .fruit, .head').forEach(el => {
+                el.classList.remove('snake', 'fruit', 'head');
+            });
+            
+            // Draw snake
+            if (state.snake) {
+                state.snake.forEach((segment, index) => {
+                    const cellIndex = segment[0] * gridSize + segment[1];
+                    const cell = gameContainer.children[cellIndex];
+                    if (index === 0) { // Head
+                        cell.classList.add('head');
+                    } else {
+                        cell.classList.add('snake');
+                    }
+                });
+            }
+            
+            // Draw fruit
+            if (state.fruit) {
+                const cellIndex = state.fruit[0] * gridSize + state.fruit[1];
+                const cell = gameContainer.children[cellIndex];
+                cell.classList.add('fruit');
+            }
+            
+            // Update scores
+            snakeScoreEl.textContent = state.snakeScore || 0;
+            fruitScoreEl.textContent = state.fruitScore || 0;
+            turnEl.textContent = state.turn || 0;
+        }
+        
+        // Generate random initial state for demo
+        function generateInitialState() {
+            return {
+                snake: [[10, 10], [10, 9], [10, 8]],
+                fruit: [15, 15],
+                snakeScore: 0,
+                fruitScore: 0,
+                turn: 0
+            };
+        }
+        
+        // Start game loop (demo)
+        function startGame() {
+            initGame();
+            const initialState = generateInitialState();
+            updateDisplay(initialState);
+            
+            startBtn.disabled = true;
+            stepBtn.disabled = false;
+            
+            // In a real implementation, this would call backend APIs
+            gameInterval = setInterval(() => {
+                // Simulate game progression
+                // This would be replaced with actual game logic from backend
+                updateDisplay(generateInitialState());
+            }, 1000);
+        }
+        
+        // Step forward one turn
+        function stepGame() {
+            // In a real implementation, this would call backend API for next state
+            if (gameState) {
+                // Simple demo progression
+                const newState = {...gameState};
+                newState.turn = (newState.turn || 0) + 1;
+                // Randomly move fruit occasionally
+                if (Math.random() > 0.7) {
+                    newState.fruit = [
+                        Math.floor(Math.random() * gridSize),
+                        Math.floor(Math.random() * gridSize)
+                    ];
+                }
+                updateDisplay(newState);
+            }
+        }
+        
+        // Reset game
+        function resetGame() {
+            clearInterval(gameInterval);
+            startBtn.disabled = false;
+            stepBtn.disabled = true;
+            initGame();
+            updateDisplay(generateInitialState());
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        stepBtn.addEventListener('click', stepGame);
+        resetBtn.addEventListener('click', resetGame);
+        
+        // Initialize empty game on load
+        initGame();
+    </script>
+</body>
+</html>
