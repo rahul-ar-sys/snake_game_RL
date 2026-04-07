@@ -1,0 +1,12 @@
+# Core dependencies
+numpy>=1.21.0
+
+# For RL and logging (optional but recommended)
+tensorboard>=2.5.0
+
+# For testing
+pytest>=6.0.0
+
+# For code quality
+flake8>=3.8.0
+black>=21.0.0

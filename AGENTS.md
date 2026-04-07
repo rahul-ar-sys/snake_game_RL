@@ -20,6 +20,8 @@ Both agents use LLM reasoning coupled with RL, storing decision weights and cont
 - `config/` - Configuration files for game parameters and agent hyperparameters
 - `frontend/` - Web-based frontend for game visualization
   - `index.html` - Main game interface with controls and display
+- `tests/` - Unit tests for game components
+- `requirements.txt` - Python dependencies
 
 ## Key Implementation Details
 - Agents use LLM for reasoning combined with Q-learning for decision making
@@ -57,3 +59,5 @@ Both agents use LLM reasoning coupled with RL, storing decision weights and cont
 - `environment/game_env.py`: Game environment managing state and rules
 - `utils/helpers.py`: Utility functions for game logic
 - `config/game_config.py`: Game parameters and hyperparameters
+- `tests/test_game.py`: Basic unit tests for game components
+- `requirements.txt`: Python dependencies (numpy, tensorboard, pytest, flake8, black)
